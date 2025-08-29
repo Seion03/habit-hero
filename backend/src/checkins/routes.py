@@ -5,7 +5,9 @@ from . import services
 
 router = APIRouter()
 
-
+"""
+Create a new check-in.
+"""
 @router.post("/", response_model=Checkin)
 async def create_checkin(checkin: CheckinCreate):
     new_checkin = await services.create_checkin(checkin)
