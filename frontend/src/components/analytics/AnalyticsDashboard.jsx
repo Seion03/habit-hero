@@ -14,7 +14,13 @@ const AnalyticsDashboard = ({ analytics, habits, checkins, loading }) => {
 
   return (
     <div className="space-y-6">
-      <OverallStats analytics={analytics} />
+      {/* Pass habits and checkins to OverallStats */}
+      <OverallStats 
+        analytics={analytics} 
+        habits={habits} 
+        checkins={checkins} 
+        loading={loading} 
+      />
       <HabitPerformance habits={habits} checkins={checkins} />
     </div>
   );

@@ -3,13 +3,22 @@ import apiService from '../services/api';
 
 export const useAnalytics = () => {
   const [analytics, setAnalytics] = useState(null);
+  const [categoryStats, setCategoryStats] = useState([]);
+  const [dayStats, setDayStats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
-      const data = await apiService.fetchAnalytics();
-      setAnalytics(data);
+      const [overviewData, categoryData, dayData] = await Promise.all([
+        apiService.fetchAnalytics(),
+        apiService.fetchCategoryStats(),
+        apiService.fetchDayStats()
+      ]);
+      
+      setAnalytics(overviewData);
+      setCategoryStats(categoryData);
+      setDayStats(dayData);
     } catch (error) {
       console.error('Error fetching analytics:', error);
     } finally {
@@ -21,5 +30,11 @@ export const useAnalytics = () => {
     fetchAnalytics();
   }, []);
 
-  return { analytics, loading, refetch: fetchAnalytics };
+  return { 
+    analytics, 
+    categoryStats, 
+    dayStats, 
+    loading, 
+    refetch: fetchAnalytics 
+  };
 };

@@ -20,12 +20,30 @@ class ApiService {
     return res.json();
   }
 
+  async fetchCategoryStats() {
+    const res = await fetch(`${API_BASE}/analytics/categories/stats`);
+    if (!res.ok) throw new Error('Failed to fetch category stats');
+    return res.json();
+  }
+
+  async fetchDayStats() {
+    const res = await fetch(`${API_BASE}/analytics/days/stats`);
+    if (!res.ok) throw new Error('Failed to fetch day stats');
+    return res.json();
+  }
+
+  async fetchHabitStats(habitId) {
+    const res = await fetch(`${API_BASE}/analytics/habits/${habitId}/stats`);
+    if (!res.ok) throw new Error('Failed to fetch habit stats');
+    return res.json();
+  }
+
   async fetchCategories() {
     try {
-      const res = await fetch(`${API_BASE}/categories/`);
+      const res = await fetch(`${API_BASE}/habits/categories`);
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length) return data;
+        return data.categories || CATEGORIES;
       }
     } catch (e) {
       // ignore and fall back
