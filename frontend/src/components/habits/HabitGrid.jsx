@@ -3,7 +3,7 @@ import { Target } from 'lucide-react';
 import HabitCard from './HabitCard';
 
 const HabitGrid = ({ habits, checkins, onToggleCheckin, onDeleteHabit }) => {
-  if (habits.length === 0) {
+  if (!habits || habits.length === 0) {
     return (
       <div className="text-center py-16">
         <Target className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -14,7 +14,7 @@ const HabitGrid = ({ habits, checkins, onToggleCheckin, onDeleteHabit }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {habits.map((habit) => (
         <HabitCard
           key={habit.id}

@@ -1,6 +1,11 @@
 import asyncpg
 import os
 from datetime import datetime
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 

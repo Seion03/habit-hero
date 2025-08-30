@@ -7,20 +7,33 @@ export const getCategoryColor = (category) => {
     'Social': 'bg-pink-100 text-pink-800 border-pink-200',
     'Creative': 'bg-indigo-100 text-indigo-800 border-indigo-200',
     'Finance': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    'Other': 'bg-gray-100 text-gray-800 border-gray-200'
+    'Other': 'bg-gray-100 text-gray-800 border-gray-200',
   };
   return colors[category] || colors['Other'];
 };
 
 export const getStreakForHabit = (habitId, checkins) => {
-  const habitCheckins = checkins
+  const habitCheckins = (checkins || [])
     .filter(c => c.habit_id === habitId)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
-  
+
   let streak = 0;
-  for (const checkin of habitCheckins) {
-    if (checkin.completed) {
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // iterate from today backwards; count consecutive completed days
+  let current = new Date(todayStr);
+  const toStr = (d) => d.toISOString().split('T')[0];
+
+  for (let i = 0; i < habitCheckins.length; i++) {
+    const c = habitCheckins[i];
+    if (c.date === toStr(current) && c.completed) {
       streak++;
+      // move to previous day
+      current.setDate(current.getDate() - 1);
+      // continue checking next items
+    } else if (c.date > toStr(current)) {
+      // skip future dates or duplicates
+      continue;
     } else {
       break;
     }
@@ -30,6 +43,6 @@ export const getStreakForHabit = (habitId, checkins) => {
 
 export const isCheckedToday = (habitId, checkins) => {
   const today = new Date().toISOString().split('T')[0];
-  const todayCheckin = checkins.find(c => c.habit_id === habitId && c.date === today);
-  return todayCheckin?.completed || false;
+  const todayCheckin = (checkins || []).find(c => c.habit_id === habitId && c.date === today);
+  return !!(todayCheckin && todayCheckin.completed);
 };

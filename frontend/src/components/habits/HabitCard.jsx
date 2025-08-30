@@ -14,49 +14,32 @@ const HabitCard = ({ habit, checkins, onToggleCheckin, onDeleteHabit }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow p-6 border border-gray-100">
-      <div className="flex justify-between items-start mb-4">
+    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 flex flex-col gap-4">
+      <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">{habit.name}</h3>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(habit.category)}`}>
+          <h3 className="text-lg font-semibold text-gray-800">{habit.name}</h3>
+          <div className={`inline-block mt-2 px-3 py-1 rounded-full text-sm border ${getCategoryColor(habit.category)}`}>
             {habit.category}
-          </span>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleDelete}
-            className="text-gray-400 hover:text-red-500 transition-colors"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
+        <button onClick={handleDelete} className="text-gray-400 hover:text-red-600" aria-label="Delete Habit">
+          <Trash2 className="h-5 w-5" />
+        </button>
       </div>
-      
-      <div className="space-y-3">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Frequency</span>
-          <span className="font-medium capitalize">{habit.frequency}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Current Streak</span>
-          <span className="font-bold text-indigo-600">{streak} days</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Started</span>
-          <span className="font-medium">{new Date(habit.start_date).toLocaleDateString()}</span>
-        </div>
+
+      <div className="flex items-center justify-between text-sm text-gray-600">
+        <span>Frequency: <span className="font-medium">{habit.frequency}</span></span>
+        <span>Streak: <span className="font-medium">{streak}🔥</span></span>
       </div>
-      
-      <div className="mt-6">
-        <Button
-          onClick={() => onToggleCheckin(habit.id)}
-          variant={checkedToday ? 'success' : 'secondary'}
-          size="full"
-        >
-          <CheckCircle className="h-5 w-5" />
-          {checkedToday ? 'Completed Today!' : 'Mark Complete'}
-        </Button>
-      </div>
+
+      <Button
+        onClick={() => onToggleCheckin(habit.id)}
+        variant={checkedToday ? 'success' : 'secondary'}
+        size="full"
+      >
+        <CheckCircle className="h-5 w-5" />
+        {checkedToday ? 'Completed Today!' : 'Mark Complete'}
+      </Button>
     </div>
   );
 };

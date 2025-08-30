@@ -4,7 +4,7 @@ import { Target, BarChart3 } from 'lucide-react';
 const Navigation = ({ activeTab, onTabChange }) => {
   const tabs = [
     { key: 'habits', label: 'My Habits', icon: Target },
-    { key: 'analytics', label: 'Analytics', icon: BarChart3 }
+    { key: 'analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
   return (
@@ -14,7 +14,7 @@ const Navigation = ({ activeTab, onTabChange }) => {
           <button
             key={key}
             onClick={() => onTabChange(key)}
-            className={`px-6 py-3 rounded-full flex items-center gap-2 font-medium transition-all ${
+            className={`px-5 py-2 rounded-full flex items-center gap-2 transition-all ${
               activeTab === key
                 ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50'

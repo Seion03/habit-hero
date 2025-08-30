@@ -1,70 +1,64 @@
 import { API_BASE } from '../utils/constants';
+import { CATEGORIES } from '../utils/constants';
 
 class ApiService {
   async fetchHabits() {
-    const response = await fetch(`${API_BASE}/habits/`);
-    return response.json();
+    const res = await fetch(`${API_BASE}/habits/`);
+    if (!res.ok) throw new Error('Failed to fetch habits');
+    return res.json();
   }
 
   async fetchCheckins() {
-    const response = await fetch(`${API_BASE}/checkins/`);
-    return response.json();
+    const res = await fetch(`${API_BASE}/checkins/`);
+    if (!res.ok) throw new Error('Failed to fetch checkins');
+    return res.json();
   }
 
   async fetchAnalytics() {
-    const response = await fetch(`${API_BASE}/analytics/overview`);
-    return response.json();
+    const res = await fetch(`${API_BASE}/analytics/overview`);
+    if (!res.ok) throw new Error('Failed to fetch analytics');
+    return res.json();
   }
 
   async fetchCategories() {
-    const response = await fetch(`${API_BASE}/habits/categories`);
-    const data = await response.json();
-    return data.categories || [];
+    try {
+      const res = await fetch(`${API_BASE}/categories/`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length) return data;
+      }
+    } catch (e) {
+      // ignore and fall back
+    }
+    // Fallback to local constants
+    return CATEGORIES;
   }
 
-  async createHabit(habitData) {
-    const response = await fetch(`${API_BASE}/habits/`, {
+  async createHabit(payload) {
+    const res = await fetch(`${API_BASE}/habits/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(habitData)
+      body: JSON.stringify(payload),
     });
-    return response.ok;
+    if (!res.ok) throw new Error('Failed to create habit');
+    return res.json();
   }
 
   async deleteHabit(habitId) {
-    const response = await fetch(`${API_BASE}/habits/${habitId}`, { 
-      method: 'DELETE' 
-    });
-    return response.ok;
+    const res = await fetch(`${API_BASE}/habits/${habitId}/`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete habit');
+    return true;
   }
 
-  async toggleCheckin(habitId, checkins) {
+  async toggleCheckin(habitId) {
     const today = new Date().toISOString().split('T')[0];
-    const existingCheckin = checkins.find(c => c.habit_id === habitId && c.date === today);
-
-    if (existingCheckin) {
-      const response = await fetch(`${API_BASE}/checkins/${existingCheckin.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          habit_id: habitId,
-          date: today,
-          completed: !existingCheckin.completed
-        })
-      });
-      return response.ok;
-    } else {
-      const response = await fetch(`${API_BASE}/checkins/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          habit_id: habitId,
-          date: today,
-          completed: true
-        })
-      });
-      return response.ok;
-    }
+    const res = await fetch(`${API_BASE}/checkins/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ habit_id: habitId, date: today, completed: true }),
+    });
+    if (!res.ok) throw new Error('Failed to create checkin');
+    return res.json();
   }
 }
 

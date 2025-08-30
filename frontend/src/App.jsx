@@ -1,5 +1,6 @@
 import React from 'react';
 import HabitTracker from './pages/HabitTracker';
+import './App.css';
 
 function App() {
   return (
