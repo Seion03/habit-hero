@@ -1,4 +1,5 @@
-export const API_BASE = 'http://localhost:8000/api';
+// Use env when provided; otherwise default to same-origin /api (works with host Nginx reverse proxy)
+export const API_BASE = (process.env.REACT_APP_API_URL || '/api').replace(/\/$/, '');
 
 export const CATEGORIES = [
   'Health & Fitness',
